@@ -1,13 +1,10 @@
-Objective: Use ChatGPT to identify and correct errors in code samples. (There may be several errors on the code)
-
-Game Overview: Players alternate placing “X” or “O” on a 3x3 board, aiming to get three in a row horizontally, vertically, or diagonally to win.
-
-$ cat tic.py
 #!/usr/bin/python3
+
 def print_board(board):
     for row in board:
         print(" | ".join(row))
         print("-" * 5)
+
 
 def check_winner(board):
     for row in board:
@@ -15,7 +12,10 @@ def check_winner(board):
             return True
 
     for col in range(len(board[0])):
-        if board[0][col] == board[1][col] == board[2][col] and board[0][col] != " ":
+        if (
+            board[0][col] == board[1][col] == board[2][col]
+            and board[0][col] != " "
+        ):
             return True
 
     if board[0][0] == board[1][1] == board[2][2] and board[0][0] != " ":
@@ -26,26 +26,35 @@ def check_winner(board):
 
     return False
 
+
 def tic_tac_toe():
     board = [[" "]*3 for _ in range(3)]
     player = "X"
+
     while not check_winner(board):
         print_board(board)
-        row = int(input("Enter row (0, 1, or 2) for player " + player + ": "))
-        col = int(input("Enter column (0, 1, or 2) for player " + player + ": "))
-        if board[row][col] == " ":
-            board[row][col] = player
-            if player == "X":
-                player = "O"
+        try:
+            row = int(
+                input("Enter row (0, 1, or 2) for player " + player + ": ")
+            )
+            col = int(
+                input("Enter column (0, 1, or 2) for player " + player + ": ")
+            )
+            if row in range(3) and col in range(3):
+                if board[row][col] == " ":
+                    board[row][col] = player
+                    player = "O" if player == "X" else "X"
+                else:
+                    print("That spot is already taken! Try again.")
             else:
-                player = "X"
-        else:
-            print("That spot is already taken! Try again.")
+                print("Coordinates must be 0, 1, or 2. Try again.")
+        except ValueError:
+            print("Invalid input. Please enter numbers only.")
 
     print_board(board)
-    print("Player " + player + " wins!")
+    winner = "O" if player == "X" else "X"
+    print("Player " + winner + " wins!")
 
-tic_tac_toe()
-You can download the code here.
 
-Warning: Test all the user inputs !
+if __name__ == "__main__":
+    tic_tac_toe()
